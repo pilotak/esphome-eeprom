@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check conventional commits
+        uses: webiny/action-conventional-commits@v1.3.0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "pypy3.10"
+
+      - name: Install ESPHome
+        run: |
+          pip3 install wheel
+          pip3 install esphome
+
+      - name: Compile
+        run: |
+          esphome compile example.yaml

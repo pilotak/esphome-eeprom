@@ -1,0 +1,34 @@
+esphome:
+  name: test
+  platform: ESP8266
+  board: esp01_1m
+
+external_components:
+  - source: components
+
+i2c:
+  sda: GPIO4
+  scl: GPIO5
+
+i2c_eeprom:
+  - id: my_eeprom
+
+switch:
+  - platform: gpio
+    id: test
+    pin:
+      number: GPIO15
+    on_turn_on:
+      - lambda: |-
+          my_eeprom->put(0x0001, 0b1); 
+
+          uint8_t read_byte;
+          my_eeprom->get(0x0001, &read_byte);
+          ESP_LOGD("eeprom","Read: 0x%02X ", read_byte);
+    on_turn_off:
+      - lambda: |-
+          my_eeprom->put(0x0001, 0b0);
+
+          uint8_t read_byte;
+          my_eeprom->get(0x0001, &read_byte);
+          ESP_LOGD("eeprom","Read: 0x%02X ", read_byte);
