@@ -27,6 +27,6 @@ some_option:
         eeprom_1->put(0x0001, write_byte);
 
         uint8_t read_byte;
-        eeprom_1->read(0x0001, &read_byte);
+        eeprom_1->get(0x0001, &read_byte);
         ESP_LOGD("eeprom","Read: 0x%02X ", read_byte);
 ```
