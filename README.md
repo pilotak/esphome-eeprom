@@ -1,5 +1,7 @@
 # esphome-eeprom
 
+[![build](https://github.com/pilotak/esphome-eeprom/actions/workflows/build.yml/badge.svg)](https://github.com/pilotak/esphome-eeprom/actions/workflows/build.yml)
+
 Lets you write/read EEPROM in lambdas
 
 ```yaml

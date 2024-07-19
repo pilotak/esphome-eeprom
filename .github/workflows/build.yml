@@ -14,7 +14,16 @@ jobs:
       - name: Check conventional commits
         uses: webiny/action-conventional-commits@v1.3.0
 
-      - name: Setup & build
-        uses: esphome/build-action@v1
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          yaml_file: example.yaml
+          python-version: "pypy3.10"
+
+      - name: Install ESPHome
+        run: |
+          pip3 install wheel
+          pip3 install esphome
+
+      - name: Compile
+        run: |
+          esphome compile example.yaml
