@@ -39,7 +39,7 @@ bool I2C_EEPROM::put(uint16_t memaddr, uint8_t value) {
 
   i2c::ErrorCode err = this->write(data, 3);
   delay(5); // EEPROM takes 5ms to write
-  return err == i2c::ERROR_OK;
+  return (err == i2c::ERROR_OK);
 }
 
 bool I2C_EEPROM::get(uint16_t memaddr, uint8_t *value) {
@@ -49,11 +49,11 @@ bool I2C_EEPROM::get(uint16_t memaddr, uint8_t *value) {
   i2c::ErrorCode err = this->write(data, 2);
 
   if (err != i2c::ERROR_OK) {
-    return true;
+    return false;
   }
 
   err = this->read(value, 1);
-  return err == i2c::ERROR_OK;
+  return (err == i2c::ERROR_OK);
 }
 
 } // namespace i2c_eeprom
