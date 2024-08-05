@@ -28,12 +28,12 @@ i2c_eeprom:
               ESP_LOGE("eeprom","Reading prev");
               return;
             }
-            ESP_LOGW("eeprom","Prev 0x%02X, 0x%02X", prev_state[0], prev_state[1]);
+            ESP_LOGD("eeprom","Prev 0x%02X, 0x%02X", prev_state[0], prev_state[1]);
             id(switch_prev_state) = prev_state[0];
 
 button:
   - platform: restart
-    name: "test_Restart"
+    name: "Restart"
 
 output:
   - platform: gpio

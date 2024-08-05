@@ -30,3 +30,15 @@ some_option:
         eeprom_1->get(0x0001, &read_byte);
         ESP_LOGD("eeprom","Read: 0x%02X ", read_byte);
 ```
+
+> Multiple devices can be used at the same time.
+
+### Configuration
+
+- **size** - _(required)_ Set the EEPPROM size:
+- **id** - _(required)_ Unique ID for use in lambdas
+- **i2c_id** - _(optional)_ ID of the I2C bus
+- **address** - _(optional)_(default 0x50) I2C address
+- **on_setup** - _(optional)_ Automation to run after setup
+
+Please see [example](./example.yaml) how to use it action.
