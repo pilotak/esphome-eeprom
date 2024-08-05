@@ -1,6 +1,6 @@
 #pragma once
-
 #include "esphome/components/i2c/i2c.h"
+#include "esphome/core/automation.h"
 #include "esphome/core/component.h"
 
 namespace esphome {
@@ -16,6 +16,22 @@ public:
 
   bool put(uint16_t memaddr, uint8_t value);
   bool get(uint16_t memaddr, uint8_t *value);
+
+  // set variable from config
+  void set_size(uint16_t size) {
+    _isTwoByteAddress = size > 2048; // 16kb
+  }
+
+  Trigger<> *get_on_setup_trigger() {
+    // Lazy create
+    if (!this->on_setup_trigger_)
+      this->on_setup_trigger_ = make_unique<Trigger<>>();
+    return this->on_setup_trigger_.get();
+  }
+
+protected:
+  bool _isTwoByteAddress = false;
+  std::unique_ptr<Trigger<>> on_setup_trigger_{nullptr};
 };
 
 } // namespace i2c_eeprom

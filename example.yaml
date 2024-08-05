@@ -2,6 +2,7 @@ esphome:
   name: test
   platform: ESP8266
   board: esp01_1m
+  esp8266_restore_from_flash: False
 
 external_components:
   - source: components
@@ -12,6 +13,13 @@ i2c:
 
 i2c_eeprom:
   - id: my_eeprom
+    size: 16KB
+    on_setup:
+      then:
+        - lambda: |-
+            uint8_t prev_state;
+            my_eeprom->get(0x0001, &prev_state);
+            ESP_LOGW("eeprom","INIT Read: 0x%02X ", prev_state);
 
 switch:
   - platform: gpio
