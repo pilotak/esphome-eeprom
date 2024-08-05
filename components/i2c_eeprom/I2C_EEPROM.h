@@ -14,8 +14,11 @@ public:
 
   bool isConnected();
 
-  bool put(uint16_t memaddr, uint8_t value);
-  bool get(uint16_t memaddr, uint8_t *value);
+  bool put(uint16_t memaddr, const uint8_t *value, size_t size);
+
+  bool put(uint16_t memaddr, uint8_t value) { return put(memaddr, &value, 1); }
+
+  bool get(uint16_t memaddr, uint8_t *value, size_t size = 1);
 
   // set variable from config
   void set_size(uint16_t size) {

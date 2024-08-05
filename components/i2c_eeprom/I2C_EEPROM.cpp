@@ -31,26 +31,33 @@ bool I2C_EEPROM::isConnected() {
   return (err == i2c::ERROR_OK);
 }
 
-bool I2C_EEPROM::put(uint16_t memaddr, uint8_t value) {
-  uint8_t data[3];
+bool I2C_EEPROM::put(uint16_t memaddr, const uint8_t *value, size_t size) {
+  uint8_t *data = new uint8_t[size + 2]();
   i2c::ErrorCode err;
+
+  if (data == nullptr) {
+    ESP_LOGE(TAG, "Not enough RAM");
+    return false;
+  }
 
   if (_isTwoByteAddress) {
     data[0] = memaddr >> 8;
     data[1] = memaddr & 0xFF;
-    data[2] = value;
+    memcpy(data + 2, value, size);
 
-    err = this->write(data, 3);
+    err = this->write(data, size + 2);
   } else {
     data[0] = memaddr & 0xFF;
-    data[1] = value;
-    err = this->write(data, 2);
+    memcpy(data + 1, value, size);
+
+    err = this->write(data, size + 1);
   }
+
+  delete[] data;
 
   delay(5); // EEPROM takes 5ms to write
 
   if (err != i2c::ERROR_OK) {
-    this->mark_failed();
     ESP_LOGE(TAG, "Write failed!");
     return false;
   }
@@ -58,7 +65,7 @@ bool I2C_EEPROM::put(uint16_t memaddr, uint8_t value) {
   return true;
 }
 
-bool I2C_EEPROM::get(uint16_t memaddr, uint8_t *value) {
+bool I2C_EEPROM::get(uint16_t memaddr, uint8_t *value, size_t size) {
   uint8_t data[2];
   i2c::ErrorCode err;
 
@@ -72,11 +79,15 @@ bool I2C_EEPROM::get(uint16_t memaddr, uint8_t *value) {
     err = this->write(data, 1);
   }
 
-  err = this->read(value, 1);
+  if (err != i2c::ERROR_OK) {
+    ESP_LOGE(TAG, "Requesting data failed!");
+    return false;
+  }
+
+  err = this->read(value, size);
 
   if (err != i2c::ERROR_OK) {
     ESP_LOGE(TAG, "Reading failed!");
-    this->mark_failed();
     return false;
   }
 

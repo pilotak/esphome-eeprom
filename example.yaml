@@ -7,6 +7,12 @@ esphome:
 external_components:
   - source: components
 
+globals:
+  - id: switch_prev_state
+    type: bool
+    restore_value: no
+    initial_value: "false"
+
 i2c:
   sda: GPIO4
   scl: GPIO5
@@ -17,26 +23,37 @@ i2c_eeprom:
     on_setup:
       then:
         - lambda: |-
-            uint8_t prev_state;
-            my_eeprom->get(0x0001, &prev_state);
-            ESP_LOGW("eeprom","INIT Read: 0x%02X ", prev_state);
+            uint8_t prev_state[2];
+            if(!my_eeprom->get(0x0001, prev_state, sizeof(prev_state))){
+              ESP_LOGE("eeprom","Reading prev");
+              return;
+            }
+            ESP_LOGW("eeprom","Prev 0x%02X, 0x%02X", prev_state[0], prev_state[1]);
+            id(switch_prev_state) = prev_state[0];
+
+button:
+  - platform: restart
+    name: "test_Restart"
+
+output:
+  - platform: gpio
+    id: output1
+    pin:
+      number: GPIO14
 
 switch:
-  - platform: gpio
-    id: test
-    pin:
-      number: GPIO15
-    on_turn_on:
+  - platform: template
+    name: "Test Switch"
+    restore_mode: DISABLED
+    lambda: |-
+      return id(switch_prev_state);
+    turn_on_action:
+      - output.turn_on: output1
       - lambda: |-
-          my_eeprom->put(0x0001, 0b1); 
-
-          uint8_t read_byte;
-          my_eeprom->get(0x0001, &read_byte);
-          ESP_LOGD("eeprom","Read: 0x%02X ", read_byte);
-    on_turn_off:
+          my_eeprom->put(0x0001, true);
+          id(switch_prev_state) = true;
+    turn_off_action:
+      - output.turn_off: output1
       - lambda: |-
-          my_eeprom->put(0x0001, 0b0);
-
-          uint8_t read_byte;
-          my_eeprom->get(0x0001, &read_byte);
-          ESP_LOGD("eeprom","Read: 0x%02X ", read_byte);
+          my_eeprom->put(0x0001, false);
+          id(switch_prev_state) = false;
