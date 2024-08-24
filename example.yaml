@@ -3,6 +3,13 @@ esphome:
   platform: ESP8266
   board: esp01_1m
   esp8266_restore_from_flash: False
+  on_boot:
+    priority: 400 # set actual output on boot after all hadrware setup
+    then:
+      - lambda: |- 
+          if(id(switch_prev_state)){
+            id(output1).turn_on();
+          }
 
 external_components:
   - source: components
