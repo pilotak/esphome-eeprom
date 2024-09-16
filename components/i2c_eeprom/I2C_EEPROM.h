@@ -22,19 +22,14 @@ public:
 
   // set variable from config
   void set_size(uint16_t size) {
-    _isTwoByteAddress = size > 2048; // 16kb
+    this->isTwoByteAddress_ = size > 2048; // 16kb
   }
 
-  Trigger<> *get_on_setup_trigger() {
-    // Lazy create
-    if (!this->on_setup_trigger_)
-      this->on_setup_trigger_ = make_unique<Trigger<>>();
-    return this->on_setup_trigger_.get();
-  }
+  Trigger<> *get_connect_trigger() const { return this->on_setup_trigger_; };
 
 protected:
-  bool _isTwoByteAddress = false;
-  std::unique_ptr<Trigger<>> on_setup_trigger_{nullptr};
+  bool isTwoByteAddress_ = false;
+  Trigger<> *on_setup_trigger_{new Trigger<>()};
 };
 
 } // namespace i2c_eeprom

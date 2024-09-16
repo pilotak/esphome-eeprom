@@ -27,7 +27,8 @@ void I2C_EEPROM::dump_config() {
 }
 
 bool I2C_EEPROM::isConnected() {
-  i2c::ErrorCode err = this->write(this->address_, nullptr, 0);
+  uint8_t data[1] = {0};
+  i2c::ErrorCode err = this->read(data, 1);
   return (err == i2c::ERROR_OK);
 }
 
@@ -40,7 +41,7 @@ bool I2C_EEPROM::put(uint16_t memaddr, const uint8_t *value, size_t size) {
     return false;
   }
 
-  if (_isTwoByteAddress) {
+  if (this->isTwoByteAddress_) {
     data[0] = memaddr >> 8;
     data[1] = memaddr & 0xFF;
     memcpy(data + 2, value, size);
@@ -69,7 +70,7 @@ bool I2C_EEPROM::get(uint16_t memaddr, uint8_t *value, size_t size) {
   uint8_t data[2];
   i2c::ErrorCode err;
 
-  if (_isTwoByteAddress) {
+  if (this->isTwoByteAddress_) {
     data[0] = memaddr >> 8;
     data[1] = memaddr & 0xFF;
 
