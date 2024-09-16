@@ -27,7 +27,7 @@ void I2C_EEPROM::dump_config() {
 }
 
 bool I2C_EEPROM::isConnected() {
-  i2c::ErrorCode err = this->bus_->write(this->address_, nullptr, 0);
+  i2c::ErrorCode err = this->write(this->address_, nullptr, 0);
   return (err == i2c::ERROR_OK);
 }
 
