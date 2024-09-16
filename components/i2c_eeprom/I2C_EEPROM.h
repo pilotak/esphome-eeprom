@@ -10,7 +10,7 @@ class I2C_EEPROM : public Component, public i2c::I2CDevice {
 public:
   void setup() override;
   void dump_config() override;
-  float get_setup_priority() const override { return setup_priority::BUS; }
+  float get_setup_priority() const override { return setup_priority::DATA; }
 
   bool isConnected();
 
