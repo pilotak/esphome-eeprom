@@ -47,5 +47,5 @@ async def to_code(config):
     # Handle on_setup lambda
     if CONF_ON_SETUP in config:
         await automation.build_automation(
-            var.on_setup_trigger(), [], config[CONF_ON_SETUP]
+            var.get_connect_trigger(), [], config[CONF_ON_SETUP]
         )
