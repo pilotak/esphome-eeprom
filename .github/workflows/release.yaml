@@ -1,0 +1,21 @@
+name: release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release_helper:
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.release.outputs.release_created }}
+      version: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: simple
