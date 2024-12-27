@@ -37,7 +37,7 @@ some_option:
 
 ### Configuration
 
-- **size** - _(required)_ Set the EEPPROM size: `1KB`, `2KB`, `4KB`, `8KB`, `16KB`, `32KB`, `64KB`, `128KB`, `256KB`, `512KB`
+- **size** - _(required)_ Set the EEPPROM size (**in bits**, not bytes): `1KB`, `2KB`, `4KB`, `8KB`, `16KB`, `32KB`, `64KB`, `128KB`, `256KB`, `512KB`
 - **id** - _(required)_ Unique ID for use in lambdas
 - **i2c_id** - _(optional)_ ID of the I2C bus
 - **address** - _(optional)_(default 0x50) I2C address
